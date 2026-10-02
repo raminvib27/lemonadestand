@@ -72,8 +72,53 @@ public class LemonadeStand
 
 	public void buySupplies()
 	{
-	    clearScreen();
-		System.out.println("You have " + qtyItems[choice - 1] + " " + nameItems[choice - 1] + "\n");
+		clearScreen();
+
+		if (choice >= 1 && choice <= 4)
+		{
+			int item = choice - 1;
+
+			System.out.println("You have " + qtyItems[item] + " " + nameItems[item]);
+
+			System.out.print("\nEach costs $");
+			System.out.printf("%.2f", costItems[item]);
+
+			System.out.print("\n\nHow many do you want to buy: ");
+			int amount = scan.nextInt();
+			temp = scan.nextLine();
+
+			double totalCost = amount * costItems[item];
+
+			if (amount <= 0)
+			{
+				System.out.println("\nYou must buy at least 1.");
+			}
+			else if (totalCost > cashOnHand)
+			{
+				System.out.println("\nYou do not have enough money.");
+			}
+			else
+			{
+				cashOnHand = cashOnHand - totalCost;
+				qtyItems[item] = qtyItems[item] + amount;
+
+				System.out.println("\nYou bought " + amount + " " + nameItems[item]);
+				System.out.print("You now have $");
+				System.out.printf("%.2f", cashOnHand);
+				System.out.println();
+			}
+
+			System.out.print("\nPress enter to go back.");
+			temp = scan.nextLine();
+		}
+		else if (choice != 5)
+		{
+			System.out.println("\nInvalid option.");
+			System.out.print("\nPress enter to go back.");
+			temp = scan.nextLine();
+		}
+
+		inventory();
 	}
 
 	public String toUpper(String string)
