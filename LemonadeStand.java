@@ -1,20 +1,19 @@
 // LemonadeStand.java
 // Vibu Ramineni
-// This program will be the "setup" for a lemonade stand that tracks various stats related to selling lemonade
+// this program tracks supplies, money, and sales for a basic lemonade stand
 import java.util.Scanner;
 
 public class LemonadeStand
 {
 	private double cashOnHand = 10;
 
+	// these arrays use the same order: cups, lemons, sugar, ice
 	private String[] nameItems = {"cups", "lemons", "cups of sugar", "cups of ice cubes"};
+	private double[] costItems = {0.1, 1.5, 2, 0.75};
+	private int[] qtyItems = {0, 0, 0, 0};
 
-	private double[] costItems = {0.1, 1.5, 2, 0.75}; // cups, lemons, sugar, ice
-
-	private int[] qtyItems = {0, 0, 0, 0};            // cups, lemons, sugar, ice
-
-	private int day = 0; // what day it is
-	private int numDay;  // how many days to play
+	private int day = 0; // current day
+	private int numDay;  // total days to play
 	// private int temperature = 0;
 	// private int weather = 0;
 
@@ -22,19 +21,21 @@ public class LemonadeStand
 	int choice;
 	String temp;
 
+	// ask how long the game should last
 	public void setup()
 	{
-	    clearScreen();
+		clearScreen();
 
 		System.out.print("\nHow many days you want to play: ");
 
-		numDay = scan.nextInt(); // still need to clear the buffer
-		String temp = scan.nextLine();
+		numDay = scan.nextInt();
+		String temp = scan.nextLine(); // clear buffer
 	}
 
+	// show inventory and let the player buy supplies or start
 	public void inventory()
 	{
-	    clearScreen();
+		clearScreen();
 
 		System.out.print("\nInventory/Purchasing\n\nIt is day " + day + "\n\nYou have $");
 		System.out.printf("%.2f", cashOnHand);
@@ -44,8 +45,8 @@ public class LemonadeStand
 		System.out.println("\nYou can:\n\n1. Buy more supplies\n2. Play the game");
 		System.out.print("\nChoose an option: ");
 
-		choice = scan.nextInt(); // still need to clear the buffer
-		temp = scan.nextLine();
+		choice = scan.nextInt();
+		temp = scan.nextLine(); // clear buffer
 
 		clearScreen();
 
@@ -59,17 +60,18 @@ public class LemonadeStand
 			System.out.println("\nYou can:\n\n1. Buy " + nameItems[0] + "\n2. Buy " + nameItems[1] + "\n3. Buy " + nameItems[2] + "\n4. Buy " + nameItems[3] + "\n5. Go back");
 			System.out.print("\nChoose an option: ");
 
-			choice = scan.nextInt(); // still need to clear the buffer
+			choice = scan.nextInt();
 			temp = scan.nextLine();
 
 			buySupplies();
 		}
 		else
 		{
-		    playGame();
+			playGame();
 		}
 	}
 
+	// buy the supply if the player can afford it
 	public void buySupplies()
 	{
 		clearScreen();
@@ -89,6 +91,7 @@ public class LemonadeStand
 
 			double totalCost = amount * costItems[item];
 
+			// check the quantity and cost before buying
 			if (amount <= 0)
 			{
 				System.out.println("\nYou must buy at least 1.");
@@ -118,9 +121,10 @@ public class LemonadeStand
 			temp = scan.nextLine();
 		}
 
-		inventory();
+		inventory(); // return to the main menu
 	}
 
+	// play each day using the supplies bought already
 	public void playGame()
 	{
 		while (day < numDay)
@@ -145,12 +149,10 @@ public class LemonadeStand
 			if (batches < 0)
 			{
 				System.out.println("\nYou cannot make a negative amount.");
-				day = day - 1;
+				day = day - 1; // retry the same day
 			}
-			else if (batches * 4 > qtyItems[0]
-					|| batches > qtyItems[1]
-					|| batches > qtyItems[2]
-					|| batches > qtyItems[3])
+			// check whether any supply would run out
+			else if (batches * 4 > qtyItems[0] || batches > qtyItems[1] || batches > qtyItems[2] || batches > qtyItems[3])
 			{
 				System.out.println("\nYou do not have enough supplies.");
 				System.out.println("You made no lemonade today.");
@@ -160,16 +162,19 @@ public class LemonadeStand
 				int cupsMade = batches * 4;
 				int cupsSold = cupsMade;
 
+				// sell at most 8 cups each day for gameplay balancing/not trolling
 				if (cupsSold > 8)
 				{
 					cupsSold = 8;
 				}
 
+				// remove the supplies used to make the lemonade
 				qtyItems[0] = qtyItems[0] - cupsMade;
 				qtyItems[1] = qtyItems[1] - batches;
 				qtyItems[2] = qtyItems[2] - batches;
 				qtyItems[3] = qtyItems[3] - batches;
 
+				// each cup sold earns $1
 				double moneyEarned = cupsSold * 1.0;
 				cashOnHand = cashOnHand + moneyEarned;
 
@@ -186,6 +191,7 @@ public class LemonadeStand
 			temp = scan.nextLine();
 		}
 
+		// show final cash and profit compared to the starting $
 		clearScreen();
 		System.out.println("\nGame over!");
 		System.out.print("\nYou finished with $");
@@ -196,15 +202,17 @@ public class LemonadeStand
 		System.out.println();
 	}
 
+	// capitalize the first letter of a string
 	public String toUpper(String string)
 	{
-	    clearScreen();
-	    return string.substring(0, 1).toUpperCase() + string.substring(1);
+		clearScreen();
+		return string.substring(0, 1).toUpperCase() + string.substring(1);
 	}
 
+	// clear the console and move the cursor to the top
 	public void clearScreen()
 	{
-	    System.out.print("\033[H\033[2J");
-	    System.out.flush();
+		System.out.print("\033[H\033[2J");
+		System.out.flush();
 	}
 }
