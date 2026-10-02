@@ -11,7 +11,7 @@ public class LemonadeStand
 
 	private double[] costItems = {0.1, 1.5, 2, 0.75}; // cups, lemons, sugar, ice
 
-	private int[] qtyItems = {0, 1, 2, 3};            // cups, lemons, sugar, ice
+	private int[] qtyItems = {0, 0, 0, 0};            // cups, lemons, sugar, ice
 
 	private int day = 0; // what day it is
 	private int numDay;  // how many days to play
@@ -66,7 +66,7 @@ public class LemonadeStand
 		}
 		else
 		{
-
+		    playGame();
 		}
 	}
 
@@ -119,6 +119,81 @@ public class LemonadeStand
 		}
 
 		inventory();
+	}
+
+	public void playGame()
+	{
+		while (day < numDay)
+		{
+			day = day + 1;
+			clearScreen();
+
+			System.out.println("\nDay " + day);
+			System.out.println("\n1 batch makes 4 cups of lemonade.");
+			System.out.println("Each batch needs:");
+			System.out.println("1 lemon, 1 cup of sugar, and 1 cup of ice");
+			System.out.println("\nYou have:");
+			System.out.println(qtyItems[0] + " cups");
+			System.out.println(qtyItems[1] + " lemons");
+			System.out.println(qtyItems[2] + " cups of sugar");
+			System.out.println(qtyItems[3] + " cups of ice cubes");
+
+			System.out.print("\nHow many batches do you want to make: ");
+			int batches = scan.nextInt();
+			temp = scan.nextLine();
+
+			if (batches < 0)
+			{
+				System.out.println("\nYou cannot make a negative amount.");
+				day = day - 1;
+			}
+			else if (batches * 4 > qtyItems[0]
+					|| batches > qtyItems[1]
+					|| batches > qtyItems[2]
+					|| batches > qtyItems[3])
+			{
+				System.out.println("\nYou do not have enough supplies.");
+				System.out.println("You made no lemonade today.");
+			}
+			else
+			{
+				int cupsMade = batches * 4;
+				int cupsSold = cupsMade;
+
+				if (cupsSold > 8)
+				{
+					cupsSold = 8;
+				}
+
+				qtyItems[0] = qtyItems[0] - cupsMade;
+				qtyItems[1] = qtyItems[1] - batches;
+				qtyItems[2] = qtyItems[2] - batches;
+				qtyItems[3] = qtyItems[3] - batches;
+
+				double moneyEarned = cupsSold * 1.0;
+				cashOnHand = cashOnHand + moneyEarned;
+
+				System.out.println("\nYou made " + cupsMade + " cups.");
+				System.out.println("You sold " + cupsSold + " cups for $1 each.");
+				System.out.println((cupsMade - cupsSold) + " cups were left over and thrown away.");
+
+				System.out.print("\nYou now have $");
+				System.out.printf("%.2f", cashOnHand);
+				System.out.println();
+			}
+
+			System.out.print("\nPress enter to continue.");
+			temp = scan.nextLine();
+		}
+
+		clearScreen();
+		System.out.println("\nGame over!");
+		System.out.print("\nYou finished with $");
+		System.out.printf("%.2f", cashOnHand);
+		System.out.println();
+		System.out.print("Your profit was $");
+		System.out.printf("%.2f", cashOnHand - 10);
+		System.out.println();
 	}
 
 	public String toUpper(String string)
